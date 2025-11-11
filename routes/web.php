@@ -6,6 +6,17 @@ Route::get('/', function () {
     return view('home',);
 });
 
+Route::get('/users', function () {
+    return view('users.userList',[
+        'users' => [
+            ['id' => 1, 'name' => 'Ana'],
+            ['id' => 2, 'name' => 'Luis'],
+            ['id' => 3, 'name' => 'María'],
+            ['id' => 4, 'name' => 'Carlos'],
+        ]
+    ]);
+});
+
 // ----------------------------------------
 Route::get('login', function () {
     return "Login usuario";
