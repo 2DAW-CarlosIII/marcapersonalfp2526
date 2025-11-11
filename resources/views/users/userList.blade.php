@@ -1,6 +1,12 @@
-<ul>
-    @foreach ($users as $user)
-        <li>Usuario {{ $user['name'] }} con identificador: {{ $user['id'] }}</li>
-    @endforeach
+@extends('dopetrope.master')
 
-</ul>
+
+
+@section('content')
+    <ul>
+        @foreach ($users as $user)
+            <li>Usuario {{ $user['name'] }} con identificador: {{ $user['id'] }}</li>
+        @endforeach
+
+    </ul>
+@endsection
