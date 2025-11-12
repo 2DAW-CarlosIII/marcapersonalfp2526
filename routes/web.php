@@ -7,7 +7,7 @@ Route::get('/', function()
 {
     return view('home');
 });
-route::get('/home/{nombre}', function($nombre)
+ route::get('/home/{nombre}', function($nombre)
 {
     return view('home', ['nombre' => $nombre]);
 });
