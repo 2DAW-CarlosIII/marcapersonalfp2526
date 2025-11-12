@@ -16,6 +16,9 @@ Route::get('/users', function () {
     ]);
 });
 
+    return 'Pantalla principal';
+});
+
 // ----------------------------------------
 Route::get('login', function () {
     return "Login usuario";
