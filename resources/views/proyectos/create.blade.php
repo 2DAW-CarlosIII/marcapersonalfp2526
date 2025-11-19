@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
-@section('content')
 
-    Añadir proyecto
-
-@stop
+    @section('content')
+        <p>Añadir familia profesional</p>
+    @endsection

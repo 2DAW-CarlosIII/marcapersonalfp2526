@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
-@section('content')
 
-    Modificar proyecto {{$id}};
-
-@stop
+    @section('content')
+        <p>Modificar familia profesional</p>
+    @endsection
