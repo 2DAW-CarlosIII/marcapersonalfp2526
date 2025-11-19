@@ -6,17 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'getHome']);
 
-Route::get('/users', function () {
-    return view('users.usersLista', ['users' => [
-        ['id' => 1, 'name' => 'Ana'],
-        ['id' => 2, 'name' => 'Luis'],
-        ['id' => 3, 'name' => 'María'],
-    ]]);
-});
-
 // ----------------------------------------
 Route::get('login', function () {
-    return "Login usuario";
+    return view('auth.login');
 });
 Route::get('logout', function () {
     return "Logout usuario";
