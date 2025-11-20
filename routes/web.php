@@ -17,15 +17,12 @@ Route::get('logout', function () {
 
 // ----------------------------------------
 Route::prefix('proyectos')->group(function () {
-
     Route::get('/', [ProyectosController::class, 'getIndex']);
     Route::get('create', [ProyectosController::class, 'getCreate']);
-
-    Route::get('/show/{id}', [ProyectosController::class, 'getShow'])
-        -> where('id', '[0-9]+');
-
-    Route::get('/edit/{id}', [ProyectosController::class, 'getEdit'])
-        -> where('id', '[0-9]+');
+    Route::get('/show/{id}', [ProyectosController::class, 'getShow'])->where('id', '[0-9]+');
+    Route::get('/edit/{id}', [ProyectosController::class, 'getEdit'])->where('id', '[0-9]+');
+    Route::post('store', [ProyectosController::class, 'store']);
+    Route::put('update/{id}', [ProyectosController::class, 'update'])->where('id', '[0-9]+');
 });
 
 
