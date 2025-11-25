@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProyectosController;
+use App\Http\Middleware\MyMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'getHome']);
@@ -16,7 +17,7 @@ Route::get('logout', function () {
 
 
 // ----------------------------------------
-Route::prefix('proyectos')->group(function () {
+Route::prefix('proyectos')->middleware(MyMiddleware::class)->group(function () {
 
     Route::get('/', [ProyectosController::class, 'getIndex']);
     Route::get('create', [ProyectosController::class, 'getCreate']);
@@ -26,6 +27,8 @@ Route::prefix('proyectos')->group(function () {
 
     Route::get('/edit/{id}', [ProyectosController::class, 'getEdit'])
         -> where('id', '[0-9]+');
+
+    Route::post('store', [ProyectosController::class, 'getStore']);
 });
 
 

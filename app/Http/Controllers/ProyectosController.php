@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 class ProyectosController extends Controller {
 
     public function getIndex() {
-        return view('proyectos.index', array('proyectos' => $this->arrayProyectos));
+        return view('proyectos.index', array('proyectos' => self::$arrayProyectos));
     }
 
     public function getShow($id) {
         return view('proyectos.show')
-            -> with('proyecto', $this->arrayProyectos[$id])
+            -> with('proyecto',self::$arrayProyectos[$id])
             -> with('id', $id);
     }
 
@@ -22,14 +22,14 @@ class ProyectosController extends Controller {
 
     public function getEdit($id) {
         return view('proyectos.edit')
-            -> with('proyecto', $this->arrayProyectos[$id])
+            -> with('proyecto', self::$arrayProyectos[$id])
             -> with('id', $id);
     }
 
     /*
     *   Array de proyectos. Hasta que veamos bases de datos estará almacenada aquí.
     */
-    private $arrayProyectos = [
+    public static $arrayProyectos = [
         [
             'docente_id' => 1,
             'nombre' => 'Tecnologías de la Información',
