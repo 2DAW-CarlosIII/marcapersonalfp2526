@@ -10,7 +10,8 @@ Route::get('/', [HomeController::class, 'getHome']);
 // ----------------------------------------
 Route::get('login', function () {
     return view('auth.login');
-});
+})->name('login');
+
 Route::get('logout', function () {
     return "Logout usuario";
 });
@@ -29,6 +30,9 @@ Route::prefix('proyectos')->middleware(MyMiddleware::class)->group(function () {
         -> where('id', '[0-9]+');
 
     Route::post('store', [ProyectosController::class, 'getStore']);
+
+    Route::put('/edit/{id}', [ProyectosController::class, 'putEdit'])
+        -> where('id', '[0-9]+');
 });
 
 

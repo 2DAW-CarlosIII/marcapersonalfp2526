@@ -26,6 +26,10 @@ class ProyectosController extends Controller {
             -> with('id', $id);
     }
 
+    public function putEdit(Request $request, $id) {
+        return back()->withInput();
+    }
+
     /*
     *   Array de proyectos. Hasta que veamos bases de datos estará almacenada aquí.
     */
