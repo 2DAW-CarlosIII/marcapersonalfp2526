@@ -27,7 +27,19 @@ class ProyectosController extends Controller {
     }
 
     public function putEdit(Request $request, $id) {
-        return back()->withInput();
+        $proyecto = self::$arrayProyectos[$id];
+
+        $proyecto['nombre'] = $request->input('nombre');
+        $proyecto['docente_id'] = $request->input('docente_id');
+        $proyecto['dominio'] = $request->input('dominio');
+        //$proyecto['metadatos'] = $request->input('metadatos');
+
+        self::$arrayProyectos[$id] = $proyecto;
+
+        //return redirect()->action([ProyectosController::class, 'getShow'], ['id' => $id]);
+        return view('proyectos.show')
+            -> with('proyecto', $proyecto)
+            -> with('id', $id);
     }
 
     /*
