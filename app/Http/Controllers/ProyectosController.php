@@ -4,32 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProyectosController extends Controller {
-
-    public function getIndex() {
-        return view('proyectos.index', array('proyectos' => $this->arrayProyectos));
+class ProyectosController extends Controller
+{
+    public function getIndex()
+    {
+        return view('proyectos.index')
+            ->with('proyectos', self::$arrayProyectos);
     }
 
-    public function getShow($id) {
+    public function getShow($id)
+    {
         return view('proyectos.show')
-            -> with('proyecto', $this->arrayProyectos[$id])
-            -> with('id', $id);
+            ->with('proyecto', self::$arrayProyectos[$id])
+            ->with('id', $id);
     }
 
-    public function getCreate() {
+    public function getCreate()
+    {
         return view('proyectos.create');
     }
 
-    public function getEdit($id) {
+    public function getEdit($id)
+    {
         return view('proyectos.edit')
-            -> with('proyecto', $this->arrayProyectos[$id])
-            -> with('id', $id);
+            ->with('proyecto', self::$arrayProyectos[$id])
+            ->with('id', $id);
     }
 
-    /*
-    *   Array de proyectos. Hasta que veamos bases de datos estará almacenada aquí.
-    */
-    private $arrayProyectos = [
+    public static $arrayProyectos = [
         [
             'docente_id' => 1,
             'nombre' => 'Tecnologías de la Información',
