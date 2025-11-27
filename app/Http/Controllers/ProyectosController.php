@@ -15,8 +15,8 @@ class ProyectosController extends Controller
     public function getShow($id)
     {
         return view('proyectos.show')
-            ->with('proyecto', self::$arrayProyectos[$id])
-            ->with('id', $id);
+            -> with('proyecto',self::$arrayProyectos[$id])
+            -> with('id', $id);
     }
 
     public function getCreate()
@@ -27,10 +27,29 @@ class ProyectosController extends Controller
     public function getEdit($id)
     {
         return view('proyectos.edit')
-            ->with('proyecto', self::$arrayProyectos[$id])
-            ->with('id', $id);
+            -> with('proyecto', self::$arrayProyectos[$id])
+            -> with('id', $id);
     }
 
+    public function putEdit(Request $request, $id) {
+        $proyecto = self::$arrayProyectos[$id];
+
+        $proyecto['nombre'] = $request->input('nombre');
+        $proyecto['docente_id'] = $request->input('docente_id');
+        $proyecto['dominio'] = $request->input('dominio');
+        //$proyecto['metadatos'] = $request->input('metadatos');
+
+        self::$arrayProyectos[$id] = $proyecto;
+
+        //return redirect()->action([ProyectosController::class, 'getShow'], ['id' => $id]);
+        return view('proyectos.show')
+            -> with('proyecto', $proyecto)
+            -> with('id', $id);
+    }
+
+    /*
+    *   Array de proyectos. Hasta que veamos bases de datos estará almacenada aquí.
+    */
     public static $arrayProyectos = [
         [
             'docente_id' => 1,
