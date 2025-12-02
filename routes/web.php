@@ -4,7 +4,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProyectosController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'getHome']);
+Route::get('/', function () {
+    return view('welcome');
+});
+
 
 // ----------------------------------------
 Route::get('login', function () {
@@ -37,4 +40,3 @@ Route::get('perfil/{id?}', function ($id = null) {
         return 'Visualizar el currículo propio';
     return 'Visualizar el currículo de ' . $id;
 }) -> where('id', '[0-9]+');
-
