@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('docente_id')->nullable();
             $table->string('nombre');
             $table->string('dominio', 120)->nullable();
-            $table->text('metadatos', 30)->nullable();
+            $table->string('metadatos', 30)->nullable();
         });
     }
 

@@ -1,22 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Proyecto;
 use Illuminate\Http\Request;
 
 class ProyectosController extends Controller
 {
     public function getIndex()
     {
-        return view('proyectos.index')
-            ->with('proyectos', self::$arrayProyectos);
+        $proyectos = Proyecto::all();
+        return view('proyectos.index', compact('proyectos'));
     }
 
     public function getShow($id)
     {
-        return view('proyectos.show')
-            ->with('proyecto', self::$arrayProyectos[$id])
-            ->with('id', $id);
+        $proyecto = Proyecto::findOrFail($id);
+        $proyecto->metadatos = unserialize($proyecto->metadatos);
+        return view('proyectos.show', compact('proyecto'));
     }
 
     public function getCreate()
@@ -26,9 +26,8 @@ class ProyectosController extends Controller
 
     public function getEdit($id)
     {
-        return view('proyectos.edit')
-            ->with('proyecto', self::$arrayProyectos[$id])
-            ->with('id', $id);
+        $proyecto = Proyecto::findOrFail($id);
+        return view('proyectos.edit', compact('proyecto'));
     }
 
 }
