@@ -17,22 +17,24 @@
 
                         <div class="form-group">
                             <label for="nombre">Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $proyecto['nombre'] }}">
+                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $proyecto->nombre }}">
                         </div>
 
                         <div class="form-group">
                             <label for="docente_id">Docente</label>
-                            <input type="number" name="docente_id" id="docente_id" value="{{ $proyecto['docente_id'] }}">
+                            <input type="number" name="docente_id" id="docente_id" value="{{ $proyecto->docente_id }}" class="form-control">
                         </div>
 
                         <div class="form-group">
                             <label for="dominio">Dominio</label>
-                            <input type="text" name="dominio" id="dominio" class="form-control" value="{{ $proyecto['dominio'] }}">
+                            <input type="text" name="dominio" id="dominio" class="form-control" value="{{ $proyecto->dominio }}">
                         </div>
 
                         <div class="form-group">
                             <label for="descripcion">Metadatos</label>
-                            <textarea name="metadatos" id="metadatos" class="form-control" rows="3"></textarea>
+                            <textarea name="metadatos" id="metadatos" class="form-control" rows="3">
+                                {{ $proyecto->metadatos }}
+                            </textarea>
                         </div>
 
                         <div class="form-group text-center">
