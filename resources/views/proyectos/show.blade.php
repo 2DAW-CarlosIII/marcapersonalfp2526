@@ -12,17 +12,17 @@
         </div>
         <div class="col-sm-8">
 
-            <h3><strong>Nombre: </strong>{{ $proyecto['nombre'] }}</h3>
+            <h3><strong>Nombre: </strong>{{ $proyecto->nombre }}</h3>
             <h4><strong>Dominio: </strong>
-                <a href="http://github.com/2DAW-CarlosIII/{{ $proyecto['dominio'] }}">
-                    http://github.com/2DAW-CarlosIII/{{ $proyecto['dominio'] }}
+                <a href="http://github.com/2DAW-CarlosIII/{{ $proyecto->dominio }}">
+                    http://github.com/2DAW-CarlosIII/{{ $proyecto->dominio }}
                 </a>
             </h4>
-            <h4><strong>Docente: </strong>{{ $proyecto['docente_id'] }}</h4>
+            <h4><strong>Docente: </strong>{{ $proyecto->docente_id }}</h4>
             <p><strong>Metadatos: </strong>
                 <ul>
-                    @foreach ($proyecto['metadatos'] as $indice => $metadato)
-                        <li>{{ $indice }}: {{ $metadato }}</li>
+                    @foreach ($metadatos as $clave => $valor)
+                        <li>{{ $clave }}: {{ $valor }}</li>
                     @endforeach
                 </ul>
             </p>
@@ -39,7 +39,7 @@
             @else
                 <a class="btn btn-primary" href="#">Aprobar proyecto</a>
             @endif
-            <a class="btn btn-warning" href="{{ action([App\Http\Controllers\ProyectosController::class, 'getEdit'], ['id' => $id]) }}">
+            <a class="btn btn-warning" href="{{ action([App\Http\Controllers\ProyectosController::class, 'getEdit'], ['id' => $proyecto->id]) }}">
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 Editar proyecto
             </a>
