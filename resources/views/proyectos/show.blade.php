@@ -29,17 +29,17 @@
             <p><strong>Estado: </strong>
 
             @php
-                $metadata = json_decode($proyecto->metadatos);
+            $metadatos = unserialize($proyecto['metadatos']);
             @endphp
 
-                @if($metadata && $metadata->calificacion >= 5)
+                @if($metadatos['calificacion'] >= 5)
                     Proyecto aprobado
                 @else
                     Proyecto suspenso
                 @endif
             </p>
 
-            @if($metadata && $metadata->calificacion >= 5)
+            @if($metadatos['calificacion'] >= 5)
                 <a class="btn btn-danger" href="#">Suspender proyecto</a>
             @else
                 <a class="btn btn-primary" href="#">Aprobar proyecto</a>
