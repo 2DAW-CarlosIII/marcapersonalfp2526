@@ -10,24 +10,24 @@
                 </div>
                 <div class="card-body" style="padding:30px">
 
-                    <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'update'], ['id' => $id]) }}" method="POST">
+                    <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'update'], ['id' => $proyecto->id]) }}" method="POST">
 
                         @csrf
                         @method('PUT')
 
                         <div class="form-group">
                             <label for="nombre">Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $proyecto['nombre'] }}">
+                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ $proyecto->nombre }}">
                         </div>
 
                         <div class="form-group">
                             <label for="docente_id">Docente</label>
-                            <input type="number" name="docente_id" id="docente_id" value="{{ $proyecto['docente_id'] }}">
+                            <input type="number" name="docente_id" id="docente_id" value="{{ $proyecto->docente_id }}">
                         </div>
 
                         <div class="form-group">
                             <label for="dominio">Dominio</label>
-                            <input type="text" name="dominio" id="dominio" class="form-control" value="{{ $proyecto['dominio'] }}">
+                            <input type="text" name="dominio" id="dominio" class="form-control" value="{{ $proyecto->dominio }}">
                         </div>
 
                         <div class="form-group">
