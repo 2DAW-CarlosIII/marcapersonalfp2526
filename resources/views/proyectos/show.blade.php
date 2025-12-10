@@ -33,6 +33,8 @@
                     Proyecto suspenso
                 @endif
             </p>
+@auth
+
 
             @if(unserialize($proyecto->metadatos)['calificacion'] >= 5)
                 <a class="btn btn-danger" href="#">Suspender proyecto</a>
@@ -43,6 +45,7 @@
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 Editar proyecto
             </a>
+@endauth
             <a class="btn btn-outline-info" href="{{ action([App\Http\Controllers\ProyectosController::class, 'getIndex']) }}">
                 Volver al listado
             </a>
