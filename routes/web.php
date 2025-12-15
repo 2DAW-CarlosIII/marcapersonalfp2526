@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FamiliasProfesionalesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectosController;
@@ -37,5 +38,24 @@ Route::prefix('proyectos')->group(function () {
             ->where('id', '[0-9]+');
     });
 });
+
+Route::prefix('familias-profesionales')->group(function () {
+
+    Route::get('/', [FamiliasProfesionalesController::class, 'getIndex']);
+
+
+    Route::get('create', [FamiliasProfesionalesController::class, 'getCreate']);
+
+
+    Route::get('show/{id}', [FamiliasProfesionalesController::class, 'getShow'])->where('id', '[0-9]+');
+
+    Route::get('edit/{id}', [FamiliasProfesionalesController::class, 'getEdit'])->where('id', '[0-9]+');
+
+    Route::post('store', [FamiliasProfesionalesController::class, 'postCreate']);
+
+    Route::put('update/{id}', [FamiliasProfesionalesController::class, 'putCreate'])->where('id', '[0-9]+');
+
+});
+
 
 require __DIR__.'/auth.php';
