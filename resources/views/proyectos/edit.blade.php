@@ -3,17 +3,14 @@
 @section('content')
 
     <div class="row" style="margin-top:40px">
-        <div class="offset-md-3 col-md-6">
-            <div class="card">
-                <div class="card-header text-center">
-                    Modificar proyecto
-                </div>
-                <div class="card-body" style="padding:30px">
+        <div class="card">
+            <div class="card-header text-center">Modificar proyecto</div>
+            <div class="card-body" style="padding:30px">
 
-                    <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'update'], ['id' => $id]) }}" method="POST">
+                <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'putEdit'], ['id' => $id]) }}" method="POST">
 
-                        @csrf
-                        @method('PUT')
+                    @csrf
+                    @method('PUT')
 
                         <div class="form-group">
                             <label for="nombre">Nombre</label>
@@ -37,15 +34,14 @@
                             </textarea>
                         </div>
 
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary" style="padding:8px 100px;margin-top:25px;">
-                                Modificar proyecto
-                            </button>
-                        </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary" style="padding:8px 100px;margin-top:25px;">
+                            Modificar proyecto
+                        </button>
+                    </div>
 
-                    </form>
+                </form>
 
-                </div>
             </div>
         </div>
     </div>
