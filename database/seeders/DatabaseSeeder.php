@@ -18,12 +18,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
+       /* User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-        ]);
+        ]);*/
 
         self::seedProyectos();
+        $this->call(FamiliasProfesionalesTableSeeder::class);
         $this->command->info('Tabla catálogo inicializada con datos!');
     }
 
