@@ -52,7 +52,6 @@ class FamiliasProfesionalesController extends Controller
         }
 
         $familiaProfesional->save();
-        $familiaProfesional->update($request->except('imagenes'));
         return redirect()->action([self::class, 'getShow'], ['id' => $familiaProfesional->id]);
     }
 }

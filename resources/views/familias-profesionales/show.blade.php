@@ -6,10 +6,10 @@
 
         <div class="col-sm-4">
             {{-- TODO: Imagen de familias profesionales --}}
-            @if ($familiaProfesional->imagen)
+            @if ($familiasProfesionales->imagen)
                 <img width="300" style="height:300px" src="{{ Storage::url($familiasProfesionales->imagen) }}" alt="imagen" class="img-thumbnail">
             @else
-                    <img width="300" style="height:300px" alt="Curriculum-vitae-warning-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Curriculum-vitae-warning-icon.svg/256px-Curriculum-vitae-warning-icon.svg.png">
+                <img width="300" style="height:300px" alt="Curriculum-vitae-warning-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Curriculum-vitae-warning-icon.svg/256px-Curriculum-vitae-warning-icon.svg.png">
             @endif
 
 
@@ -19,11 +19,11 @@
             <h2>{{ $familiasProfesionales->codigo }}</h2>
             <h2>{{ $familiasProfesionales->nombre }}</h2>
             <ul class="actions">
-                @auth
-                    <li><a href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getEdit'], $familiasProfesionales->id) }}"
-                        class="button alt">Editar proyecto</a>
-                    </li>
-                @endauth
+
+                <li><a href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getEdit'], $familiasProfesionales->id) }}"
+                    class="button alt">Editar proyecto</a>
+                </li>
+
                 <li><a href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getIndex']) }}"
                         class="button alt">Volver al listado</a>
                 </li>
