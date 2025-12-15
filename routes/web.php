@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectosController;
+use App\Http\Controllers\FamiliasProfesionalesController;
 use Illuminate\Support\Facades\Route;
 
 /* Route::get('/', function () {
@@ -36,6 +37,22 @@ Route::prefix('proyectos')->group(function () {
         Route::put('update/{id}', [ProyectosController::class, 'update'])
             ->where('id', '[0-9]+');
     });
+});
+
+Route::prefix('familias-profesionales')->group(function () {
+    Route::get('/', [FamiliasProfesionalesController::class, 'getIndex']);
+
+    Route::get('create', [FamiliasProfesionalesController::class, 'getCreate']);
+
+    Route::get('/show/{id}', [FamiliasProfesionalesController::class, 'getShow']) -> where('id', '[0-9]+');
+
+    Route::get('/edit/{id}', [FamiliasProfesionalesController::class, 'getEdit']) -> where('id', '[0-9]+');
+
+    Route::post('postCreate', [FamiliasProfesionalesController::class, 'postCreate']);
+
+    Route::put('putCreate/{id}', [FamiliasProfesionalesController::class, 'putCreate'])-> where('id', '[0-9]+');
+
+
 });
 
 require __DIR__.'/auth.php';
