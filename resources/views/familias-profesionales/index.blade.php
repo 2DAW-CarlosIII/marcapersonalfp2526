@@ -11,8 +11,13 @@
         @foreach ($familias_profesionales as $key => $familia_profesional)
             <div class="col-4 col-6-medium col-12-small">
                 <section class="box">
-                    <a href="#" class="images featured"><img src="{{ asset('/images/logo.png') }}" alt=""
-                            style="width: 50%; height: 50%;" /></a>
+                    <a href="#" class="images featured">
+                        @if ($familia_profesional->imagen)
+                            <img width="300" src="{{ Storage::url($familia_profesional->imagen) }}" alt="imagen" class="img-thumbnail">
+                        @else
+                            <img width="300" alt="Curriculum-vitae-warning-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Curriculum-vitae-warning-icon.svg/256px-Curriculum-vitae-warning-icon.svg.png">
+                        @endif
+                    </a>
                     <header>
                         <h3>{{ $familia_profesional->nombre }}</h3>
                     </header>
