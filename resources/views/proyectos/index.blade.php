@@ -2,9 +2,9 @@
 
 @section('content')
 
-    <div class="row">
+   <div class="row">
 
-    @foreach ($proyectos as $key => $proyecto)
+        @foreach ($proyectos as $key => $proyecto)
 
     <div class="col-4 col-6-medium col-12-small">
         <section class="box">
@@ -25,8 +25,8 @@
         </section>
     </div>
 
-    @endforeach
+        @endforeach
 
-</div>
+    </div>
 
 @stop

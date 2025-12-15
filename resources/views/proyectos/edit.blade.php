@@ -6,14 +6,15 @@
         <div class="offset-md-3 col-md-6">
             <div class="card">
                 <div class="card-header text-center">
-                    Modificar proyecto
+                    Modificar Proyecto {{$id}}
                 </div>
                 <div class="card-body" style="padding:30px">
 
-                    <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'update'], ['id' => $id]) }}" method="POST">
+                    <form action="{{ action([App\Http\Controllers\ProyectosController::class, 'update'],['id'=>$id]) }}" method="POST">
 
-                        @csrf
                         @method('PUT')
+                        @csrf
+
 
                         <div class="form-group">
                             <label for="nombre">Nombre</label>
@@ -24,6 +25,7 @@
                             <label for="docente_id">Docente</label>
                             <input type="number" name="docente_id" id="docente_id" value="{{ $proyecto->docente_id }}" class="form-control">
                         </div>
+
 
                         <div class="form-group">
                             <label for="dominio">Dominio</label>
@@ -43,7 +45,7 @@
                             </button>
                         </div>
 
-                    </form>
+                        {{-- TODO: Cerrar formulario --}}
 
                 </div>
             </div>
