@@ -4,8 +4,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectosController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FamiliasProfesionalesController;
 
 /* Route::get('/', function () {
+
     return view('welcome');
 }); */
 
@@ -37,5 +39,20 @@ Route::prefix('proyectos')->group(function () {
             ->where('id', '[0-9]+');
     });
 });
+Route::prefix('familias-profesionales')->group(function () {
+    Route::get('/', [FamiliasProfesionalesController::class, 'getIndex']);
+
+    Route::get('create', [FamiliasProfesionalesController::class, 'getCreate']);
+
+    Route::get('show/{id}', [FamiliasProfesionalesController::class, 'getShow'])->where('id', '[0-9]+')->name('familias.show');
+
+    Route::get('edit/{id}', [FamiliasProfesionalesController::class, 'getEdit'])->where('id', '[0-9]+');
+
+    Route::post('store', [FamiliasProfesionalesController::class, 'store']);
+
+    Route::put('update/{id}', [FamiliasProfesionalesController::class, 'update'])->where('id', '[0-9]+');
+
+    Route::post('/familias/create', [FamiliasProfesionalesController::class, 'postCreate'])->name('familias.postCreate');
+})->middleware('auth');
 
 require __DIR__.'/auth.php';
