@@ -4,8 +4,8 @@
 
         <div class="col-sm-4">
 
-            @if ($familiaProfesional->imagen)
-                <img width="300" style="height:300px" src="{{ Storage::url($familiaProfesional->imagen) }}" alt="imagen"
+            @if ($familia_profesional->imagen)
+                <img width="300" style="height:300px" src="{{ Storage::url($familia_profesional->imagen) }}" alt="imagen"
                     class="img-thumbnail">
             @else
                 <img width="300" style="height:300px" alt="Curriculum-vitae-warning-icon"
