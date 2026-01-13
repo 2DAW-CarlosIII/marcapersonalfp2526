@@ -1,45 +1,44 @@
 @extends('layouts.master')
+
+@section('logo')
+    <h1><a href="{{ url(config('app.url')) }}">Eportfolio Grupo 1 </a></h1>
+    <p>Visualizacion de Familias Profesionales</p>
+@endsection
+
 @section('content')
     <div class="row m-4">
-
-        <div class="col-sm-4">
-
-            @if ($familia_profesional->imagen)
-                <img width="300" style="height:300px" src="{{ Storage::url($familia_profesional->imagen) }}" alt="imagen"
-                    class="img-thumbnail">
-            @else
-                <img width="300" style="height:300px" alt="Curriculum-vitae-warning-icon"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Curriculum-vitae-warning-icon.svg/256px-Curriculum-vitae-warning-icon.svg.png">
-            @endif
-
-        </div>
-        <div class="col-sm-8">
-
-            <h3><strong>Nombre: </strong>{{ $familia_profesional->nombre }}</h3>
-            <h4><strong>Dominio: </strong>
-                <a href="http://github.com/2DAW-CarlosIII/{{ $familia_profesional->codigo }}">
-                    http://github.com/2DAW-CarlosIII/{{ $familia_profesional->codigo }}
-                </a>
-            </h4>
-            <h4><strong>Codigo: </strong>{{ $familia_profesional->codigo }}</h4>
-            <p><strong>Nombre: </strong>{{ $familia_profesional->nombre }}</p>
-
-
-            @auth
-                <a class="btn btn-warning"
-                    href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getEdit'], ['id' => $familia_profesional->id]) }}">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                    Editar familia profesional.
-                </a>
-
-            @endauth
-
-            <a class="btn btn-outline-info"
-                href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getIndex']) }}">
-                Volver al listado
+        <div class="col-12 col-sm-4">
+            <a href="#" class="images featured">
+                @if ($familia_profesional->imagen)
+                    <img width="300" style="height:300px" src="{{ Storage::url($familia_profesional->imagen) }}" alt="imagen"
+                        class="img-thumbnail">
+                @else
+                    <img width="300" style="height:300px" alt="Curriculum-vitae-warning-icon"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Curriculum-vitae-warning-icon.svg/256px-Curriculum-vitae-warning-icon.svg.png">
+                @endif
             </a>
+        </div>
+        <div class="col-12 col-sm-8">
 
+            <header>
+                <h3>{{ $familia_profesional->nombre }}</h3>
+                <h4>Codigo: {{$familia_profesional->codigo}}</h4>
+                <p>Descripcion: {{$familia_profesional->descripcion}}</p>
+            </header>
+            <footer>
+                <p></p>
+                <ul class="actions">
+                    <li><a href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getEdit'], $familia_profesional->id) }}"
+                            class="button alt">Editar Familia Profesional</a></li>
+                    <li><a href="{{ action([App\Http\Controllers\FamiliasProfesionalesController::class, 'getIndex']) }}"
+                            class="button alt">Todas los Familias Profesionales</a></li>
+                </ul>
+            </footer>
 
         </div>
     </div>
+@endsection
+
+@section('menu')
+    <li>Opcion adicional</li>
 @endsection
