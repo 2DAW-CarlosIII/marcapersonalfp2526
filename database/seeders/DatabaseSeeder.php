@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Proyecto;
 use App\Models\User;
+use Database\Seeders\FamiliasProfesionalesTableSeeder;
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,13 +20,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
+        /* User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-        ]);
+        ]); */
 
         self::seedProyectos();
         $this->command->info('Tabla catálogo inicializada con datos!');
+        $this->call(FamiliasProfesionalesTableSeeder::class);
     }
 
     private function seedProyectos():void

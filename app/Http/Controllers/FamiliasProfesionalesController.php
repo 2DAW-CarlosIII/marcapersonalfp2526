@@ -4,52 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Models\FamiliaProfesional;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class FamiliasProfesionalesController extends Controller
 {
-
-
     public function getIndex()
     {
-        $familias_profesionales = FamiliaProfesional::all();
-        return view('familiasProfesionales.index')
-            ->with('familiasProfesionales', $familias_profesionales);
-    }
-
-    public function getShow($id)
-    {
-        $familias_profesionales = FamiliaProfesional::findOrFail($id);
-        return view('familiasProfesionales.show')
-            ->with('familiaProfesional', $familias_profesionales)
-            ->with('id', $id);
+        return view('familias-profesionales.index')
+            ->with('familias_profesionales', FamiliaProfesional::all());
     }
 
     public function getCreate()
     {
+        return view('familias-profesionales.create');
+    }
 
-        return view('familiasProfesionales.create');
+    public function getShow($id)
+    {
+        return view('familias-profesionales.show')
+            ->with('familia_profesional', FamiliaProfesional::findorFail($id))
+            ->with('id', $id);
     }
 
     public function getEdit($id)
     {
-        $familias_profesionales = FamiliaProfesional::findOrFail($id);
-        return view('familiasProfesionales.edit')
-            ->with('familiaProfesional',  $familias_profesionales);
+        return view('familias-profesionales.edit')
+            ->with('familia_profesional', FamiliaProfesional::findorFail($id))
+            ->with('id', $id);
     }
 
-    public function putEdit(Request $request, $id): RedirectResponse
-    {
-        $familiaProfesional = FamiliaProfesional::findOrFail($id);
+    public function store(Request $request){
 
-        $datosEditados = $request->all();
+        $familia_profesional = new FamiliaProfesional();
+        $familia_profesional->nombre = $request->nombre;
+        $familia_profesional->codigo = $request->codigo;
+        $familia_profesional->save();
 
-        if ($request->hasFile('imagen')) {
+        return redirect()->action([FamiliasProfesionalesController::class, 'getShow'], ['id'=> $familia_profesional->id]);
+    }
+
+    public function update(Request $request){
+        $familia_profesional = FamiliaProfesional::findorFail($request->id);
+
+        $familia_profesional->nombre = $request->nombre;
+        $familia_profesional->codigo = $request->codigo;
+
+        if($request->hasFile('imagen')){
             $path = $request->file('imagen')->store('imagenes', ['disk' => 'public']);
-            $datosEditados['imagen'] = $familiaProfesional->imagen = $path;
+            $familia_profesional->imagen = $path;
         }
+        $familia_profesional->save();
 
-        $familiaProfesional->update($datosEditados);
-        return redirect()->action([self::class, 'getShow'], ['id' => $familiaProfesional->id]);
+        return redirect()->action([FamiliasProfesionalesController::class, 'getShow'], ['id'=> $familia_profesional->id]);
     }
-};
+
+
+}
