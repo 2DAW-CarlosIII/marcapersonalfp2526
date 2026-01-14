@@ -1,0 +1,2549 @@
+openapi: 3.0.1
+info:
+  title: MarcaPersonalFP - OpenAPI 3.0
+  version: 1.0.11
+  description: >-
+    AquÃ­ podrÃ¡s encontrar los endpoint de la API del servidor marcapersonalFP
+    basada en la especificaciÃ³n OpenAPI 3.0.
+
+    El objetivo de este proyecto es la creaciÃ³n de una pÃ¡gina web
+    marcaPersonalFP.es en la que los estudiantes de FormaciÃ³n Profesional puedan
+    publicar su currÃ­culo y los logros conseguidos a lo largo de su estancia en
+    el centro.
+
+
+    El diagrama de casos de uso inicial que se plantea es el que se puede ver en
+    la siguiente imagen:
+
+
+    ![Diagrama de casos de uso
+    marcapersonalfp.es](https://raw.githubusercontent.com/2DAW-CarlosIII/marcapersonalFP_REA/master/documentos/marcaPersonalFP-usecase.png)
+
+
+    Por su parte, la base de datos que darÃ¡ soporte a la web seguirÃ¡ el
+    siguiente esquema:
+
+
+    ![Esquema relacional de la base de datos
+    marcapersonalfp.es](https://raw.githubusercontent.com/2DAW-CarlosIII/marcapersonalFP_REA/master/documentos/marcapersonalFP.drawio.png)
+
+
+    Enlaces interesantes del proyecto:
+
+    - [PÃ¡gina web en producciÃ³n en el CPIFP Carlos III](https://marcapersonalfp.cifpcarlos3.es/)
+
+    - [CÃ³digo fuente de la pÃ¡gina
+    web](https://github.com/2DAW-CarlosIII/marcapersonalFP23_24)
+
+    - [Recurso Educativo
+    Abierto](https://github.com/2DAW-CarlosIII/marcapersonalFP_REA)
+  termsOfService: https://marcapersonalFP.es/termsOfService
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+externalDocs:
+  description: Proyecto de innovaciÃ³n
+  url: >-
+    https://github.com/2DAW-CarlosIII/marcapersonalFP_REA/blob/master/documentos/Proyecto%20Marca%20Personal%20FP.pdf
+servers:
+  - url: http://localhost/api/v1
+    variables: {}
+    description: Servidor localhost
+  - url: http://marcapersonalFP.test/api/v1
+    variables: {}
+    description: Entorno de desarrollo local
+  - url: https://marcapersonalFP.cifpcarlos3.es/api/v1
+    variables: {}
+    description: Entorno de producciÃ³n
+  - url: http://marcapersonalFP.test/api/records
+    variables: {}
+    description: Entorno React
+tags:
+  - name: authentication
+    description: Operaciones con los tokens
+  - name: actividad
+    description: Operaciones con las actividades
+  - name: ciclo
+    description: Operaciones con los ciclos
+  - name: competencia
+    description: Operaciones con las competencias
+  - name: curriculo
+    description: Operaciones con los currÃ­culos
+  - name: empresa
+    description: Operaciones con las empresas
+  - name: familia_profesional
+    description: Operaciones con las familias profesionales
+  - name: idioma
+    description: Operaciones con los idiomas
+  - name: proyecto
+    description: Operaciones con los proyectos
+  - name: reconocimiento
+    description: Operaciones con los reconocimientos
+  - name: user
+    description: Operaciones con los usuarios
+security:
+  - bearerAuth: []
+  - cookieAuth: []
+paths:
+  /tokens:
+    post:
+      tags:
+        - authentication
+      summary: Asocia un nuevo token al usuario
+      description: Asocia un nuevo token al usuario con su email y password
+      operationId: createToken
+      requestBody:
+        description: Email y password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  token:
+                    Bearer
+                    4_qr0e87r890e7r9n8qewr7b98qe7rb9q8ew7rbq980e7rbqfdsuyb
+        '403':
+          description: Invalid credentials
+    delete:
+      tags:
+        - authentication
+      summary: Elimina el token asociado al usuario
+      description: Elimina el token asociado al usuario
+      operationId: deleteToken
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+  /login:
+    post:
+      tags:
+        - authentication
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      parameters:
+        - name: email
+          in: query
+          description: The user email for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /logout:
+    post:
+      tags:
+        - authentication
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /{tabla}/count:
+    get:
+      summary: NÃºmero de registros de una determinada tabla.
+      description: NÃºmero de registros de una determinada tabla.
+      parameters:
+        - name: tabla
+          in: path
+          description: nombre de la tabla
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  count: 23
+  /actividades:
+    get:
+      tags:
+        - actividad
+      summary: Devuelve todas las actividades
+      description: Devuelve todas las actividades
+      operationId: getActividades
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actividad'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actividad'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: actividad not found
+    post:
+      tags:
+        - actividad
+      summary: AÃ±ade una nueva actividad
+      description: AÃ±ade una nueva actividad
+      operationId: addActividad
+      requestBody:
+        description: Crea una nueva Actividad
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Actividad'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Actividad'
+        '405':
+          description: Invalid input
+  /actividades/{id}:
+    get:
+      tags:
+        - actividad
+      summary: Encuentra una actividad segÃºn su ID
+      description: Devuelve una Ãºnica actividad
+      operationId: getActividadById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la actividad a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Actividad'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Actividad'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: actividad not found
+    put:
+      tags:
+        - actividad
+      summary: Actualiza una actividad con los datos del formulario
+      description: ''
+      operationId: updateActividadWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID de la actividad a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea una nueva Actividad
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Actividad'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - actividad
+      summary: Borra una actividad
+      description: Borra una actividad
+      operationId: deleteActividad
+      parameters:
+        - name: id
+          in: path
+          description: id de la actividad a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid actividad value
+  /ciclos:
+    get:
+      tags:
+        - ciclo
+      summary: Devuelve todos los ciclos
+      description: Devuelve todos los ciclos
+      operationId: getCiclos
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ciclo'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ciclo'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: ciclo not found
+    post:
+      tags:
+        - ciclo
+      summary: AÃ±ade un nuevo ciclo
+      description: AÃ±ade un nuevo ciclo
+      operationId: addCiclo
+      requestBody:
+        description: Crea un nuevo Ciclo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ciclo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ciclo'
+        '405':
+          description: Invalid input
+  /ciclos/{id}:
+    get:
+      tags:
+        - ciclo
+      summary: Encuentra un ciclo segÃºn su ID
+      description: Devuelve un Ãºnico ciclo
+      operationId: getCicloById
+      parameters:
+        - name: id
+          in: path
+          description: ID del ciclo a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ciclo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Ciclo'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: ciclo not found
+    put:
+      tags:
+        - ciclo
+      summary: Actualiza un ciclo con los datos del formulario
+      description: ''
+      operationId: updateCicloWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID del ciclo a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea un nuev Ciclo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ciclo'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - ciclo
+      summary: Borra una ciclo
+      description: Borra una ciclo
+      operationId: deleteCiclo
+      parameters:
+        - name: id
+          in: path
+          description: id del ciclo a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ciclo value
+  /competencias:
+    get:
+      tags:
+        - competencia
+      summary: Devuelve todas los competencias
+      description: Devuelve todas los competencias
+      operationId: getCompetencias
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Competencia'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Competencia'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: competencia not found
+    post:
+      tags:
+        - competencia
+      summary: AÃ±ade una nueva competencia
+      description: AÃ±ade una nueva competencia
+      operationId: addCompetencia
+      requestBody:
+        description: Crea una nueva Competencia
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competencia'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Competencia'
+        '405':
+          description: Invalid input
+  /competencias/{id}:
+    get:
+      tags:
+        - competencia
+      summary: Encuentra una competencia segÃºn su ID
+      description: Devuelve una Ãºnica competencia
+      operationId: getCompetenciaById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la competencia a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competencia'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Competencia'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: competencia not found
+    put:
+      tags:
+        - competencia
+      summary: Actualiza una competencia con los datos del formulario
+      description: ''
+      operationId: updateCompetenciaWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID de la competencia a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea una nueva Competencia
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Competencia'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - competencia
+      summary: Borra una competencia
+      description: Borra una competencia
+      operationId: deleteCompetencia
+      parameters:
+        - name: id
+          in: path
+          description: id de la competencia a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid competencia value
+  /curriculos:
+    get:
+      tags:
+        - curriculo
+      summary: Devuelve todos los curriculos
+      description: Devuelve todos los curriculos
+      operationId: getCurriculos
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Curriculo'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Curriculo'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: curriculo not found
+    post:
+      tags:
+        - curriculo
+      summary: AÃ±ade un nuevo curriculo
+      description: AÃ±ade un nuevo curriculo
+      operationId: addCurriculo
+      requestBody:
+        description: Crea un nuevo Curriculo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curriculo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Curriculo'
+        '405':
+          description: Invalid input
+  /curriculos/{id}:
+    get:
+      tags:
+        - curriculo
+      summary: Encuentra un curriculo segÃºn su ID
+      description: Devuelve un Ãºnico curriculo
+      operationId: getCurriculoById
+      parameters:
+        - name: id
+          in: path
+          description: ID del curriculo a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curriculo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Curriculo'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: curriculo not found
+    put:
+      tags:
+        - curriculo
+      summary: Actualiza un curriculo con los datos del formulario
+      description: ''
+      operationId: updateCurriculoWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID del curriculo a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea un nuevo Curriculo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Curriculo'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - curriculo
+      summary: Borra un curriculo
+      description: Borra un curriculo
+      operationId: deleteCurriculo
+      parameters:
+        - name: id
+          in: path
+          description: id del curriculo a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid curriculo value
+  /curriculos/{id}/pdf:
+    get:
+      tags:
+        - curriculo
+      summary: Descarga del currÃ­culo PDF de un estudiante
+      description: Descarga del currÃ­culo PDF de un estudiante.
+        Si lo solicita una empresa, se envÃ­a un email al estudiante para que autorice
+      operationId: downloadPDFCurriculoById
+      parameters:
+        - name: id
+          in: path
+          description: ID del curriculo a descargar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: curriculo not found
+  /curriculos/{id}/autorizar:
+    get:
+      tags:
+        - curriculo
+      summary: Autoriza la descarga del currÃ­culo PDF de un estudiante
+      description: Un estudiante autoriza que una empresa descargue su currÃ­culo.
+      operationId: autorizeDownloadPDFCurriculo
+      parameters:
+        - name: id
+          in: path
+          description: ID de la empresa autorizada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: curriculo not found
+  /curriculos/{id}/pdf/{md5}:
+    get:
+      tags:
+        - curriculo
+      summary: Descarga del currÃ­culo PDF de un estudiante
+      description: Una Empresa, a la que se le ha facilitado el md5 de un currÃ­culo,
+        se le permite la descarga de ese PDF
+      operationId: downloadPDFCurriculoByMd5
+      parameters:
+        - name: id
+          in: path
+          description: ID del curriculo a descargar
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: md5
+          in: path
+          description: md5 del fichero PDF a descargar
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: curriculo not found
+  /empresas:
+    get:
+      tags:
+        - empresa
+      summary: Devuelve todas los empresas
+      description: Devuelve todas los empresas
+      operationId: getEmpresas
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Empresa'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Empresa'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: empresa not found
+    post:
+      tags:
+        - empresa
+      summary: AÃ±ade una nueva empresa
+      description: AÃ±ade una nueva empresa
+      operationId: addEmpresa
+      requestBody:
+        description: Crea una nueva Empresa
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empresa'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Empresa'
+        '405':
+          description: Invalid input
+  /empresas/{id}:
+    get:
+      tags:
+        - empresa
+      summary: Encuentra una empresa segÃºn su ID
+      description: Devuelve una Ãºnica empresa
+      operationId: getEmpresaById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la empresa a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empresa'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Empresa'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: empresa not found
+    put:
+      tags:
+        - empresa
+      summary: Actualiza una empresa con los datos del formulario
+      description: ''
+      operationId: updateEmpresaWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID de la empresa a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea una nueva Empresa
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Empresa'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - empresa
+      summary: Borra una empresa
+      description: Borra una empresa
+      operationId: deleteEmpresa
+      parameters:
+        - name: id
+          in: path
+          description: id de la empresa a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid empresa value
+  /empresas/acceso/{token}:
+    get:
+      tags:
+        - empresa
+      summary: AutenticaciÃ³n de una empresa con token
+      description: El token se le facilita por correo electrÃ³nico cuando un docente
+        registra la empresa en el sistema
+      operationId: accesoEmpresaByToken
+      parameters:
+        - name: token
+          in: path
+          description: ID de la empresa a devolver
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Home
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: empresa not found
+  /familias_profesionales:
+    get:
+      tags:
+        - familia_profesional
+      summary: Devuelve todas las familias profesionales
+      description: Devuelve todas las familias profesionales
+      operationId: getFamiliasProfesionales
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamiliaProfesional'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamiliaProfesional'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: familia_profesional not found
+    post:
+      tags:
+        - familia_profesional
+      summary: AÃ±ade una nueva familia_profesional
+      description: AÃ±ade una nueva familia_profesional
+      operationId: addFamiliaProfesional
+      requestBody:
+        description: Crea una nueva Familia Profesional
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FamiliaProfesional'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FamiliaProfesional'
+        '405':
+          description: Invalid input
+  /familias_profesionales/{id}:
+    get:
+      tags:
+        - familia_profesional
+      summary: Encuentra una familia_profesional segÃºn su ID
+      description: Devuelve una Ãºnica familia_profesional
+      operationId: getFamiliaProfesionalById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la familia_profesional a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FamiliaProfesional'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FamiliaProfesional'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: familia_profesional not found
+    put:
+      tags:
+        - familia_profesional
+      summary: Actualiza una familia_profesional con los datos del formulario
+      description: ''
+      operationId: updateFamiliaProfesionalWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID de la familia_profesional a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea una nueva Familia Profesional
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FamiliaProfesional'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - familia_profesional
+      summary: Borra una familia_profesional
+      description: Borra una familia_profesional
+      operationId: deleteFamiliaProfesional
+      parameters:
+        - name: id
+          in: path
+          description: id de la familia_profesional a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid familia_profesional value
+  /idiomas:
+    get:
+      tags:
+        - idioma
+      summary: Devuelve todas los idiomas
+      description: Devuelve todas los idiomas
+      operationId: getIdiomas
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Idioma'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Idioma'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: idioma not found
+    post:
+      tags:
+        - idioma
+      summary: AÃ±ade una nueva idioma
+      description: AÃ±ade una nueva idioma
+      operationId: addIdioma
+      requestBody:
+        description: Crea una nueva Idioma
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Idioma'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Idioma'
+        '405':
+          description: Invalid input
+  /idiomas/{id}:
+    get:
+      tags:
+        - idioma
+      summary: Encuentra una idioma segÃºn su ID
+      description: Devuelve una Ãºnica idioma
+      operationId: getIdiomaById
+      parameters:
+        - name: id
+          in: path
+          description: ID de la idioma a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Idioma'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Idioma'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: idioma not found
+    put:
+      tags:
+        - idioma
+      summary: Actualiza una idioma con los datos del formulario
+      description: ''
+      operationId: updateIdiomaWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID de la idioma a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea una nueva Idioma
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - idioma
+      summary: Borra una idioma
+      description: Borra una idioma
+      operationId: deleteIdioma
+      parameters:
+        - name: id
+          in: path
+          description: id de la idioma a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid idioma value
+  /proyectos:
+    get:
+      tags:
+        - proyecto
+      summary: Devuelve todos los proyectos
+      description: Devuelve todos los proyectos
+      operationId: getProyectos
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Proyecto'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Proyecto'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: proyecto not found
+    post:
+      tags:
+        - proyecto
+      summary: AÃ±ade un nuevo proyecto
+      description: AÃ±ade un nuevo proyecto
+      operationId: addProyecto
+      requestBody:
+        description: Crea un nuevo Proyecto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+        '405':
+          description: Invalid input
+  /proyectos/{id}:
+    get:
+      tags:
+        - proyecto
+      summary: Encuentra un proyecto segÃºn su ID
+      description: Devuelve un Ãºnico proyecto
+      operationId: getProyectoById
+      parameters:
+        - name: id
+          in: path
+          description: ID del proyecto a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: proyecto not found
+    put:
+      tags:
+        - proyecto
+      summary: Actualiza un proyecto con los datos del formulario
+      description: ''
+      operationId: updateProyectoWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID del proyecto a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea un nuevo Proyecto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Proyecto'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - proyecto
+      summary: Borra un proyecto
+      description: Borra un proyecto
+      operationId: deleteProyecto
+      parameters:
+        - name: id
+          in: path
+          description: id del proyecto a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid proyecto value
+  /proyectos/copyrepo/{user}/{reponame}:
+    post:
+      tags:
+        - proyecto
+      summary: Copia un repositorio de GitHub al repositorio global de MarcaPersonalFP
+      description: Copia un repositorio de GitHub al repositorio global de MarcaPersonalFP
+      operationId: copyRepo
+      parameters:
+        - name: user
+          in: path
+          description: nombre de usuario de GitHub en el que se encuentra el repositorio
+          required: true
+          schema:
+            type: string
+        - name: reponame
+          in: path
+          description: nombre del repositorio a copiar
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Proyecto'
+        '405':
+          description: Invalid input
+  /reconocimientos:
+    get:
+      tags:
+        - reconocimiento
+      summary: Devuelve todos los reconocimientos
+      description: Devuelve todos los reconocimientos
+      operationId: getReconocimientos
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reconocimiento'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reconocimiento'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: reconocimiento not found
+    post:
+      tags:
+        - reconocimiento
+      summary: AÃ±ade un nuevo reconocimiento
+      description: AÃ±ade un nuevo reconocimiento
+      operationId: addReconocimiento
+      requestBody:
+        description: Crea un nuevo Reconocimiento
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+        '405':
+          description: Invalid input
+  /reconocimientos/{id}:
+    get:
+      tags:
+        - reconocimiento
+      summary: Encuentra un reconocimiento segÃºn su ID
+      description: Devuelve un Ãºnico reconocimiento
+      operationId: getReconocimientoById
+      parameters:
+        - name: id
+          in: path
+          description: ID del reconocimiento a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: reconocimiento not found
+    put:
+      tags:
+        - reconocimiento
+      summary: Actualiza un reconocimiento con los datos del formulario
+      description: ''
+      operationId: updateReconocimientoWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID del reconocimiento a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea un nuevo Reconocimiento
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Reconocimiento'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - reconocimiento
+      summary: Borra un reconocimiento
+      description: Borra un reconocimiento
+      operationId: deleteReconocimiento
+      parameters:
+        - name: id
+          in: path
+          description: id del reconocimiento a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid reconocimiento value
+  /reconocimientos/{id}/validar:
+    put:
+      tags:
+        - reconocimiento
+      summary: Un docente valida el reconocimiento de un estudiante.
+      description: ''
+      operationId: validaReconocimiento
+      parameters:
+        - name: id
+          in: path
+          description: ID del reconocimiento a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Reconocimiento'
+        '405':
+          description: Invalid input
+  /docentes:
+    get:
+      tags:
+        - user
+      summary: Devuelve todos los docentes
+      description: Devuelve todos los docentes
+      operationId: getDocentes
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: user not found
+  /estudiantes:
+    get:
+      tags:
+        - user
+      summary: Devuelve todos los estudiantes
+      description: Devuelve todos los estudiantes
+      operationId: getEstudiantes
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: user not found
+  /users:
+    get:
+      tags:
+        - user
+      summary: Devuelve todos los usuarios
+      description: Devuelve todos los usuarios
+      operationId: getUsers
+      parameters:
+        - name: q
+          in: query
+          description: texto a buscar
+          required: false
+          schema:
+            type: string
+        - name: _start
+          in: query
+          description: posiciÃ³n del registro inicial a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _end
+          in: query
+          description: posiciÃ³n del registro final a mostrar
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _sort
+          in: query
+          description: columna por la que ordenar
+          required: false
+          schema:
+            type: string
+        - name: _order
+          in: query
+          description: direcciÃ³n de la ordenaciÃ³n
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: user not found
+    post:
+      tags:
+        - user
+      summary: AÃ±ade un nuevo usuario
+      description: AÃ±ade un nuevo usuario
+      operationId: addUser
+      requestBody:
+        description: Crea un nuevo User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '405':
+          description: Invalid input
+  /users/{id}:
+    get:
+      tags:
+        - user
+      summary: Encuentra un usuario segÃºn su ID
+      description: Devuelve un Ãºnico usuario
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario a devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OperaciÃ³n exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: user not found
+    put:
+      tags:
+        - user
+      summary: Actualiza un usuario con los datos del formulario
+      description: ''
+      operationId: updateUserWithForm
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario a actualizar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Crea un nuevo User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - user
+      summary: Borra un usuario
+      description: Borra un usuario
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: id del usuario a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid user value
+  /user:
+    get:
+      tags:
+        - user
+      summary: Show profile of authenticated user
+      description: ''
+      operationId: getAuthenticatedUser
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '302':
+          description: User not authenticated
+        '400':
+          description: Invalid username supplied
+  /profile:
+    get:
+      tags:
+        - user
+      summary: Show profile of authenticated user
+      description: ''
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '302':
+          description: User not authenticated
+        '400':
+          description: Invalid username supplied
+    patch:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteAccount
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+components:
+  schemas:
+    Actividad:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        docente_id:
+          $ref: '#/components/schemas/User'
+        insignia:
+          type: string
+          format: image
+      xml:
+        name: actividad
+    Ciclo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        codCiclo:
+          type: string
+          example: DAW
+        codFamilia:
+          type: string
+          example: INF
+        familia_id:
+          $ref: '#/components/schemas/FamiliaProfesional'
+        grado:
+          type: string
+          example: Medio/Superior
+        nombre:
+          type: string
+          example: Desarrollo de Aplicaciones Web
+      xml:
+        name: ciclo
+    Competencia:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        nombre:
+          type: string
+          example: autonomÃ­a personal
+        color:
+          type: string
+          example: red
+      xml:
+        name: competencia
+    Credenciales:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@marcapersonalfp.es
+        password:
+          type: string
+          example: mi_password
+      xml:
+        name: credenciales
+    Curriculo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        user_id:
+          $ref: '#/components/schemas/User'
+        video_curriculum:
+          type: string
+          description: URL al videocurrÃ­culo
+          example: https://youtu.be/2in5XMTlSWg
+        texto_curriculum:
+          type: string
+          description: fichero con el currÃ­culo
+          example: miCurriculo.pdf
+      xml:
+        name: curriculum
+    Empresa:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        nif:
+          type: string
+          example: B-123123
+        email:
+          type: string
+          example: empresa@marcapersonalfp.es
+        token:
+          type: string
+          example: 43l2jkh2l4jk3hrjkllqk
+        user_id:
+          $ref: '#/components/schemas/User'
+        nombre:
+          type: string
+          example: Mi Empresa
+      xml:
+        name: empresa
+    Idioma:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        alpha2:
+          type: string
+          example: ES
+        alpha3t:
+          type: string
+          example: ESP
+        alpha3b:
+          type: string
+          example: ESP
+        english_name:
+          type: string
+          example: Spanish
+        native_name:
+          type: string
+          example: EspaÃ±ol
+      xml:
+        name: competencia
+    FamiliaProfesional:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        codigo:
+          type: string
+          example: INF
+        nombre:
+          type: string
+          example: InformÃ¡tica y Comunicaciones
+      xml:
+        name: familia_profesional
+    Proyecto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        docente_id:
+          $ref: '#/components/schemas/User'
+        nombre:
+          type: string
+          description: Nombre del proyecto
+          example: Marca Personal FP
+        dominio:
+          type: string
+          description: slug del nombre del proyecto
+          example: marcapersonalfp
+        metadatos:
+          type: object
+          format: json
+          description: datos de interÃ©s del proyecto
+          example:
+            fecha_inicio: '2023-01-15'
+            fecha_fin: '2023-05-30'
+            calificacion: 9.5
+      xml:
+        name: proyecto
+    Reconocimiento:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        estudiante_id:
+          $ref: '#/components/schemas/User'
+        actividad_id:
+          $ref: '#/components/schemas/Actividad'
+        documento:
+          type: integer
+          format: int64
+          description: Documento que evidencia la participaciÃ³n
+          example: 10
+        docente_validador:
+          $ref: '#/components/schemas/User'
+      xml:
+        name: reconocimiento
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: user@marcapersonalfp.es
+        password:
+          type: string
+          example: '12345'
+        linkedIn:
+          type: string
+          example: linkedinProfile
+      xml:
+        name: user
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    User:
+      description: User object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/User'
+    Reconocimiento:
+      description: Reconocimiento object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Reconocimiento'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Reconocimiento'
+    Curriculo:
+      description: Curriculo object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Curriculo'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Curriculo'
+    Actividad:
+      description: Actividad object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Actividad'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Actividad'
+    Ciclo:
+      description: Ciclo object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ciclo'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Ciclo'
+    Credenciales:
+      description: Credenciales para autenticar al usuario
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Credenciales'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Credenciales'
+    FamiliaProfesional:
+      description: FamiliaProfesional object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FamiliaProfesional'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/FamiliaProfesional'
+    Proyecto:
+      description: Proyecto object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Proyecto'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Proyecto'
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+    cookieAuth:            # arbitrary name for the security scheme
+      type: apiKey
+      in: cookie
+      name: laravel_session # cookie name
