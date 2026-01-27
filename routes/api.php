@@ -33,6 +33,11 @@ Route::prefix('v1')->group(function () {
         'idiomas_users' => 'idiomaUser'
     ]);
 
+    Route::apiResource('users.idiomas', IdiomaUserController::class)
+    ->parameters([
+        'users' => 'user'
+    ]);
+
 });
 
 

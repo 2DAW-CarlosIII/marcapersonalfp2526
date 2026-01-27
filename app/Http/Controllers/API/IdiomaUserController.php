@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\IdiomaUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IdiomaUserController extends Controller
@@ -11,40 +12,45 @@ class IdiomaUserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(User $user)
     {
-        //
+        return $user->idiomas()->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
-        //
+        $user->idiomas()->attach($request->idioma_id);
+
+        return response()->json($user, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(IdiomaUser $idiomaUser)
+    public function show(User $user, $idiomaUserId)
     {
-        //
+        return $user->idiomas()->findOrFail($idiomaUserId);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, IdiomaUser $idiomaUser)
+    public function update(Request $request, User $user, $idiomaUserId)
     {
-        //
+        $user->idiomas()->detach($idiomaUserId);
+        $user->idiomas()->attach($request->idioma_id);
+        return response()->json($user, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(IdiomaUser $idiomaUser)
+    public function destroy(User $user, $idiomaUserId)
     {
-        //
+        $user->idiomas()->detach($idiomaUserId);
+        return response()->json(null, 204);
     }
 }

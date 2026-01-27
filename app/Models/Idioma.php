@@ -9,7 +9,7 @@ class Idioma extends Model
     protected $fillable = [
         'alpha2',
         'alpha3t',
-        'alpha4b',
+        'alpha3b',
         'english_name',
         'native_name',
     ];
