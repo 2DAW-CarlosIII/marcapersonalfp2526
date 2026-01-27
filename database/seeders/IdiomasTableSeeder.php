@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Idioma;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +15,7 @@ class IdiomasTableSeeder extends Seeder
     {
         DB::table('idiomas')->truncate();
         foreach (self::$idiomas as $idioma) {
-            Idioma::insert([
+             DB::table('idiomas')->insert([
                 'alpha2' => $idioma['639-1'],
                 'alpha3t' => $idioma['639-2/T'],
                 'alpha3b' => $idioma['639-2/B'],

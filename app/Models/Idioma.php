@@ -13,12 +13,15 @@ class Idioma extends Model
     protected $table = 'idiomas';
 
     protected $fillable = [
-        'id',
-
+        'alpha2',
+        'alpha3t',
+        'alpha3b',
+        'english_name',
+        'native_name'
     ];
 
 
     public function users(): BelongsToMany {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'users_idiomas');
     }
 }
