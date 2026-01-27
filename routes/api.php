@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CicloController;
 use App\Http\Controllers\API\FamiliaProfesionalController;
+use App\Http\Controllers\API\IdiomaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,6 +23,7 @@ Route::prefix('v1')->group(function () {
         'familias_profesionales' => 'familiaProfesional'
     ]);
 
+    Route::apiResource('idiomas', IdiomaController::class);
 });
 
 
