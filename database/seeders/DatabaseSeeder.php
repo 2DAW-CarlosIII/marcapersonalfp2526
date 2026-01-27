@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Proyecto;
 use App\Models\User;
 use Database\Seeders\FamiliasProfesionalesTableSeeder;
-
+use Database\Seeders\IdiomasTableSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Tabla catálogo inicializada con datos!');
         $this->call(FamiliasProfesionalesTableSeeder::class);
         $this->call(CiclosTableSeeder::class);
+        $this->call(IdiomasTableSeeder::class);
 
         Model::reguard();
         Schema::enableForeignKeyConstraints();
