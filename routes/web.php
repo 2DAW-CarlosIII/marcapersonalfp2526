@@ -55,4 +55,6 @@ Route::prefix('familias-profesionales')->group(function () {
 
 });
 
+
+
 require __DIR__.'/auth.php';
