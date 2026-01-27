@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -50,4 +51,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(Curriculo::class);
     }
+
+    // Metodo para relacionar con idiomas
+    public function idiomas(): BelongsToMany
+    {
+        return $this->belongsToMany(Idioma::class);
+
+        $user = User::find(1);
+
+        foreach ($user->idiomas as $idioma) {
+            $idiomas = User::find(1)->idiomas()->orderBy('name')->get();
+            return $this->belongsToMany(Idioma::class, 'users_idiomas');
+
+            return $this->belongsToMany(Idioma::class)->withPivot('certificado');
+
+        }
+    }
+
 }
