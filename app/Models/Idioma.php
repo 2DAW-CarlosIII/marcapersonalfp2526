@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Idioma extends Model
 {
@@ -16,7 +17,6 @@ class Idioma extends Model
     ];
 
     private static $filterColumns = [
-        'id',
         'alpha2',
         'alpha3t',
         'alpha3b',
@@ -25,7 +25,7 @@ class Idioma extends Model
     ];
 
 
-    public function users()
+    public function users() : BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users_idiomas');
     }
