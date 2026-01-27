@@ -6,7 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Idioma;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -49,5 +50,9 @@ class User extends Authenticatable
     public function curriculo()
     {
         return $this->hasOne(Curriculo::class);
+    }
+    public function idiomas(): BelongsToMany
+    {
+        return $this->belongsToMany(Idioma::class, 'users_idiomas', 'user_id', 'idioma_id');
     }
 }
