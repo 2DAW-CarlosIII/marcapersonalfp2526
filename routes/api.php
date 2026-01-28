@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\API\CicloController;
 use App\Http\Controllers\API\FamiliaProfesionalController;
+use App\Http\Controllers\API\IdiomaController;
+use App\Http\Controllers\API\IdiomasUsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,6 +22,17 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('familias_profesionales', FamiliaProfesionalController::class)
     ->parameters([
         'familias_profesionales' => 'familiaProfesional'
+    ]);
+
+    Route::apiResource('idiomas', IdiomaController::class)
+    ->parameters([
+        'idiomas' => 'idioma'
+    ]);
+
+    Route::apiResource('users.idiomas', IdiomasUsersController::class)
+    ->parameters([
+        'users' => 'user',
+        'idiomas' => 'idioma'
     ]);
 
 });
