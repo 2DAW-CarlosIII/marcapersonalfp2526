@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Idioma;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\IdiomaResource;
 
 class IdiomaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Idioma::find(1)->users()->orderBy('name')->get();
+        $query = Idioma::query();
+
+        return IdiomaResource::collection($query->paginate($request->per_page));
     }
 
     /**
@@ -22,15 +25,19 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $idioma = json_decode($request->getContent(), true);
+
+        $idioma = Idioma::create($idioma);
+
+        return new IdiomaResource($idioma);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Idioma $idioma)
     {
-
+        return new IdiomaResource($idioma);
     }
 
     /**
@@ -38,7 +45,10 @@ class IdiomaController extends Controller
      */
     public function update(Request $request, Idioma $idioma)
     {
-        //
+        $idiomaData = json_decode($request->getContent(), true);
+        $idioma->update($idiomaData);
+
+        return new IdiomaResource($idioma);
     }
 
     /**
@@ -46,6 +56,13 @@ class IdiomaController extends Controller
      */
     public function destroy(Idioma $idioma)
     {
-        //
+        try {
+            $idioma->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error: ' . $e->getMessage()
+            ], 400);
+        }
     }
 }

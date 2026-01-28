@@ -7,7 +7,6 @@ use App\Models\User;
 use Database\Seeders\FamiliasProfesionalesTableSeeder;
 use Database\Seeders\CiclosTableSeeder;
 use Database\Seeders\IdiomasTableSeeder;
-use Database\Seeders\UsersIdiomasTableSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
@@ -37,7 +36,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FamiliasProfesionalesTableSeeder::class);
         $this->call(CiclosTableSeeder::class);
         $this->call(IdiomasTableSeeder::class);
-        $this->call(UsersIdiomasTableSeeder::class);
 
         Model::reguard();
         Schema::enableForeignKeyConstraints();
