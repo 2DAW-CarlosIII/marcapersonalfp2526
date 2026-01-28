@@ -25,7 +25,11 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
+        $idioma = json_decode($request->getContent(), true);
 
+        $idioma = Idioma::create($idioma);
+
+        return new IdiomaResource($idioma);
     }
 
     /**
@@ -41,7 +45,10 @@ class IdiomaController extends Controller
      */
     public function update(Request $request, Idioma $idioma)
     {
-        //
+        $idiomaData = json_decode($request->getContent(), true);
+        $idioma->update($idiomaData);
+
+        return new IdiomaResource($idioma);
     }
 
     /**
@@ -49,6 +56,13 @@ class IdiomaController extends Controller
      */
     public function destroy(Idioma $idioma)
     {
-        //
+        try {
+            $idioma->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error: ' . $e->getMessage()
+            ], 400);
+        }
     }
 }
