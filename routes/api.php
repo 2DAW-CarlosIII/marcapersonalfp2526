@@ -28,9 +28,10 @@ Route::prefix('v1')->group(function () {
     ->parameters([
         'idiomas' => 'idioma'
     ]);
-    Route::apiResource('idiomas_users', IdiomaUserController::class)
+    Route::apiResource('users.idiomas', IdiomaUserController::class)
     ->parameters([
-        'idiomas_users' => 'idiomaUser'
+        'users' => 'user',
+        'idioma_id' => 'idioma_id'
     ]);
 
 });

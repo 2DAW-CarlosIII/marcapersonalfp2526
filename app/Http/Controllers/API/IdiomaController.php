@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\IdiomaResource;
 use App\Models\Idioma;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class IdiomaController extends Controller
@@ -25,13 +24,7 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
-        $idioma = new Idioma();
-        $idioma->alpha2 = $request->alpha2;
-        $idioma->alpha3t = $request->alpha3t;
-        $idioma->alpha3b = $request->alpha3b;
-        $idioma->english_name = $request->english_name;
-        $idioma->native_name = $request->native_name;
-        $idioma->save();
+        $idioma = Idioma::create($request->all());
 
         return new IdiomaResource($idioma);
     }
@@ -49,8 +42,8 @@ class IdiomaController extends Controller
      */
     public function update(Request $request, Idioma $idioma)
     {
-        $idiomaData = json_decode($request->getContent(), true);
-        $idioma->update($idiomaData);
+        $idioma->update($request->all());
+
 
         return new IdiomaResource($idioma);
     }
