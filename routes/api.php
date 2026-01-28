@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CicloController;
 use App\Http\Controllers\API\FamiliaProfesionalController;
+use App\Http\Controllers\IdiomaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,7 +25,15 @@ Route::prefix('v1')->group(function () {
 
 });
 
+Route::prefix('v1')->group(function () {
+    Route::apiResource('idiomas', IdiomaController::class);
 
+    Route::apiResource('idiomas', IdiomaController::class)
+    ->parameters([
+        'idiomas' => 'idioma'
+    ]);
+
+});
 
 // Rutas PHP-CRUD-API
 Route::any('/{any}', function (ServerRequestInterface $request) {
@@ -47,3 +56,5 @@ Route::any('/{any}', function (ServerRequestInterface $request) {
     return $response;
 
 })->where('any', '.*')->middleware(['auth:sanctum']);
+
+

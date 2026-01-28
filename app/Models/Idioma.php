@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Idioma extends Model
 {
+
     protected $fillable = [
         'id',
         'alpha2',
@@ -15,4 +16,10 @@ class Idioma extends Model
         'english_name',
         'native_name',
     ];
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'users_idiomas');
+    }
+
 }

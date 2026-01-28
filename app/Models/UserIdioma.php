@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class UserIdioma extends Model
 {
 
-     protected $fillable = [
+    protected $fillable = [
         'id',
         'user_id',
         'idioma_id',
     ];
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'users_idiomas', 'user_id', 'idioma_id');
+    }
 
 }
