@@ -3,24 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\IdiomaResource;
+use App\Http\Resources\Idiomas_Users;
 use App\Models\Idioma;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class IdiomaController extends Controller
+class IdiomasUsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(User $user)
     {
-        $query = Idioma::query();
-        if($query) {
-            $query->orWhere('alpha2', 'like', '%' .$request->q . '%');
-        }
-        return IdiomaResource::collection(
-            $query->orderBy($request->sort ?? 'id', $request->order ?? 'asc')
-            ->paginate($request->per_page));
+       return $user->idiomas()->get();
     }
 
     /**
@@ -28,39 +23,39 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
-        $idioma = json_decode($request->getContent(), true);
+        $idiomas_users = json_decode($request->getContent(), true);
 
-        $idioma = Idioma::create($idioma);
+        $idiomas_users = Idiomas_Users::create($idiomas_users);
 
-        return new IdiomaResource($idioma);
+        return new Idiomas_Users($idiomas_users);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Idioma $idioma)
+    public function show(User $user, Idioma $idioma)
     {
-        return new IdiomaResource($idioma);
+        return new Idiomas_Users($idioma);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Idioma $idioma)
+    public function update(Request $request, User $user, Idioma $idioma)
     {
         $idiomaData = json_decode($request->getContent(), true);
         $idioma->update($idiomaData);
 
-        return new IdiomaResource($idioma);
+        return new Idiomas_Users($idioma);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Idioma $idioma)
+    public function destroy(Idiomas_Users $idiomas_users)
     {
         try {
-            $idioma->delete();
+            $idiomas_users->delete();
             return response()->json(null, 204);
         } catch (\Exception $e) {
             return response()->json([

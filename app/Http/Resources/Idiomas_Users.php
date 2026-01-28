@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Idioma;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IdiomaResource extends JsonResource
+class Idiomas_Users extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,6 +14,6 @@ class IdiomaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-      return parent::toArray($request);
+        return parent::toArray($request);
     }
 }
