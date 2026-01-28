@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_idiomas', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('idioma_id')->constrained()->onDelete('cascade');
+        Schema::create('idiomas_users', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('idioma_id')->constrained('idiomas')->onDelete('cascade');
             $table->primary(['user_id', 'idioma_id']);
         });
     }

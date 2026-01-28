@@ -16,6 +16,6 @@ class Idioma extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'idiomas_users', 'idioma_id', 'user_id');
     }
 }

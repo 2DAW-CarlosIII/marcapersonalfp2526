@@ -7,14 +7,14 @@ use App\Models\User;
 use App\Models\UserIdioma;
 use Illuminate\Http\Request;
 
-class UserIdiomaController extends Controller
+class IdiomaUserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return $user->idiomas;
+        return response()->json($user->idiomas()->get());
     }
 
     /**
@@ -24,22 +24,6 @@ class UserIdiomaController extends Controller
     {
         $idioma = $user->idiomas()->create($request->all());
         return response()->json($idioma, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserIdioma $userIdioma)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserIdioma $userIdioma)
-    {
-        //
     }
 
     /**
