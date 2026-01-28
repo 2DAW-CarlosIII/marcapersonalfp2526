@@ -10,6 +10,11 @@
                         </x-dropdown-link>
                     </li>
                     <li>
+                        <x-dropdown-link :href="'/api/user'">
+                            {{ __('Datos usuario') }}
+                        </x-dropdown-link>
+                    </li>
+                    <li>
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
