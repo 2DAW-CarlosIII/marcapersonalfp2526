@@ -14,7 +14,8 @@ class Idioma extends Model
 
 
     use HasFactory;
-
+    protected $table = 'idiomas';
+    public $timestamps = false;
     protected $fillable = [
         'alpha2',
         'alpha3t',
@@ -25,7 +26,7 @@ class Idioma extends Model
 
    public function users(): BelongsToMany
     {
-        
-        return $this->belongsToMany(User::class, 'users_idiomas');
+
+        return $this->belongsToMany(User::class, 'users_idiomas', 'idioma_id', 'user_id');
     }
 }

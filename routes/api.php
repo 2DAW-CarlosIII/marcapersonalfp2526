@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\API\CicloController;
 use App\Http\Controllers\API\FamiliaProfesionalController;
+use App\Http\Controllers\API\IdiomaController;
+use App\Http\Controllers\API\UserIdiomaController as APIUserIdiomaController;
+use App\Http\Controllers\UserIdiomaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,6 +24,17 @@ Route::prefix('v1')->group(function () {
     ->parameters([
         'familias_profesionales' => 'familiaProfesional'
     ]);
+
+
+    Route::get('idiomas', [IdiomaController::class, 'index']);
+    Route::post('idiomas', [IdiomaController::class, 'store']);
+    Route::get('idiomas/{id}', [IdiomaController::class, 'show']);
+    Route::put('idiomas/{id}', [IdiomaController::class, 'update']);
+    Route::delete('idiomas/{id}', [IdiomaController::class, 'destroy']);
+
+    Route::get('users/{user}/idiomas', [APIUserIdiomaController::class, 'index']);
+    Route::post('users/{user}/idiomas', [APIUserIdiomaController::class, 'store']);
+    Route::delete('users/{user}/idiomas/{idioma}', [APIUserIdiomaController::class, 'destroy']);
 
 });
 
