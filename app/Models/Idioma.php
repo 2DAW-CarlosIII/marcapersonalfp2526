@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Idioma extends Model
 {
@@ -14,7 +15,7 @@ class Idioma extends Model
         'native_name',
     ];
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users_idiomas', 'idioma_id', 'user_id');
     }

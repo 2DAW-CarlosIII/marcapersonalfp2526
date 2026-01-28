@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FamiliasProfesionalesTableSeeder::class);
         $this->call(CiclosTableSeeder::class);
         $this->call(IdiomasTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
 
         Model::reguard();
         Schema::enableForeignKeyConstraints();
