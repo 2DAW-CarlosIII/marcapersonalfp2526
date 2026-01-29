@@ -2,19 +2,28 @@
 
 use App\Http\Controllers\API\CicloController;
 use App\Http\Controllers\API\FamiliaProfesionalController;
+use App\Http\Controllers\API\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
 use Tqdev\PhpCrudApi\Api;
 use Tqdev\PhpCrudApi\Config\Config;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 // Rutas /api/v1
 
 Route::prefix('v1')->group(function () {
+    
+    Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // emite un nuevo token
+    Route::post('tokens', [TokenController::class, 'store']);
+    // elimina el token del usuario autenticado
+    Route::delete('tokens', [TokenController::class, 'destroy'])->middleware('auth:sanctum');
+
     Route::apiResource('ciclos', CicloController::class);
 
     Route::apiResource('familias_profesionales', FamiliaProfesionalController::class)
