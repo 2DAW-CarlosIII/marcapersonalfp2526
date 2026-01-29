@@ -44,7 +44,7 @@ class FamiliasProfesionalesController extends Controller
 
     public function update(Request $request){
         $familia_profesional = FamiliaProfesional::findorFail($request->id);
-        
+
         $familia_profesional->nombre = $request->nombre;
         $familia_profesional->codigo = $request->codigo;
 
@@ -53,9 +53,9 @@ class FamiliasProfesionalesController extends Controller
             $familia_profesional->imagen = $path;
         }
         $familia_profesional->save();
-    
+
         return redirect()->action([FamiliasProfesionalesController::class, 'getShow'], ['id'=> $familia_profesional->id]);
     }
 
-    
+
 }
