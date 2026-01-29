@@ -22,6 +22,24 @@ Route::prefix('v1')->group(function () {
         'familias_profesionales' => 'familiaProfesional'
     ]);
 
+    Route::apiResource('users', App\Http\Controllers\API\UserController::class)
+    ->parameters([
+        'users' => 'user'
+    ]);
+
+
+    Route::apiResource('users.idiomas', App\Http\Controllers\API\UserIdiomaController::class)
+    ->parameters([
+        'users' => 'user',
+        'idiomas' => 'idioma'
+    ]);
+
+
+    ROute::apiResource('idiomas', App\Http\Controllers\API\IdiomaController::class)
+    ->parameters([
+        'idiomas' => 'idioma'
+    ]);
+
 });
 
 
