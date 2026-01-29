@@ -16,7 +16,7 @@ class UserIdiomaController extends Controller
         return $user->idiomas()->get();
     }
 
-    public function store(Request $request, User $user, Idioma $idioma)
+    public function store(Request $request, User $user)
     {
         $user->idiomas()->attach($request->idioma_id);
 
