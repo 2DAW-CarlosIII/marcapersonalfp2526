@@ -7,42 +7,34 @@ use Illuminate\Http\Request;
 
 class IdiomaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-      return Idioma::all();
+        return response()->json(['data' => Idioma::all()]);
     }
+
     public function show(Idioma $idioma)
     {
-      return  $idioma;
+        $idioma = Idioma::findOrFail($idioma->id);
+        return response()->json($idioma);
     }
+
     public function store(Request $request)
     {
-      $idioma = new Idioma();
-      $idioma->alpha2 = $request->alpha2;
-      $idioma->alpha3t = $request->alpha3t;
-      $idioma->alpha3b = $request->alpha3b;
-      $idioma->english_name = $request->english_name;
-      $idioma->native_name = $request->native_name;
-      $idioma->save();
-
-      return  $idioma;
+        $idioma = Idioma::create($request->all());
+        return response()->json($idioma, 201);
     }
+
     public function update(Request $request, Idioma $idioma)
     {
-      $idioma->alpha2 = $request->alpha2;
-      $idioma->alpha3t = $request->alpha3t;
-      $idioma->alpha3b = $request->alpha3b;
-      $idioma->english_name = $request->english_name;
-      $idioma->native_name = $request->native_name;
-      $idioma->save();
-
-      return  $idioma;
+        $idioma = Idioma::findOrFail($idioma->id);
+        $idioma->update($request->all());
+        return response()->json($idioma);
     }
 
     public function destroy(Idioma $idioma)
     {
-      $idioma->delete();
-      return response()->noContent();
+        $idioma = Idioma::findOrFail($idioma->id);
+        $idioma->delete();
+        return response()->json(null, 204);
     }
-
 }

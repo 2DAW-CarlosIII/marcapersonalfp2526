@@ -11,6 +11,7 @@ use App\Models\Idioma;
 class IdiomasApiTest extends TestCase
 {
     use RefreshDatabase;
+    protected $seed = true;
 
     private function idiomaPayload(array $overrides = [])
     {
@@ -148,4 +149,5 @@ class IdiomasApiTest extends TestCase
             $this->assertFalse($idioma->users->contains('id', $user->id));
         }
     }
+
 }

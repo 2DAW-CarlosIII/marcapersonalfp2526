@@ -13,26 +13,27 @@ class IdiomaController extends Controller
     {
         // Obtener todos los idiomas
 
-        return IdiomaResource::collection(Idioma::all());
+        return response()->json(['data' => Idioma::all()]);
     }
 
     public function show(Idioma $idioma)
     {
         // Obtener un idioma específico
+        $idioma = Idioma::findOrFail($idioma->id);
         return response()->json($idioma);
     }
 
     public function store(Request $request)
     {
         // Crear un nuevo idioma
-        $idioma = Idioma::create($request->all());
-        return response()->json($idioma, 201);
+
 
     }
 
     public function update(Request $request, Idioma $idioma)
     {
         // Actualizar un idioma existente
+        $idioma = Idioma::findOrFail($idioma->id);
         $idioma->update($request->all());
         return response()->json($idioma);
     }
@@ -40,8 +41,9 @@ class IdiomaController extends Controller
     public function destroy(Idioma $idioma)
     {
         // Eliminar un idioma
+        $idioma = Idioma::findOrFail($idioma->id);
         $idioma->delete();
-        return response()->noContent();
+        return response()->json(null, 204);
     }
 }
 
