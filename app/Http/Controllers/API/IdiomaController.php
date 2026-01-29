@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\IdiomaResource;
 use App\Models\Idioma;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IdiomaController extends Controller
@@ -24,11 +25,11 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
-        $ciclo = json_decode($request->getContent(), true);
+        $idioma = json_decode($request->getContent(), true);
 
-        $ciclo = Idioma::create($ciclo);
+        $idioma = Idioma::create($idioma);
 
-        return new IdiomaResource($ciclo);
+        return new IdiomaResource($idioma);
     }
 
     /**

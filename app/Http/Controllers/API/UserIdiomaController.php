@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\IdiomaResource;
 use App\Http\Resources\UserIdiomaResource;
 use App\Models\Idioma;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserIdiomaController extends Controller
@@ -13,10 +14,12 @@ class UserIdiomaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, User $user, Idioma $idioma)
     {
         return UserIdiomaResource::collection(
-            UserIdioma::orderBy($request->sort ?? 'id', $request->order ?? 'asc')
+            UserIdioma::where('user_id', $user->id)
+            ->where('idioma_id', $idioma->id)
+            ->orderBy($request->sort ?? 'id', $request->order ?? 'asc')
             ->paginate($request->per_page));
     }
 
