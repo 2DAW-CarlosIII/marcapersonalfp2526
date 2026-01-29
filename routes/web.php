@@ -5,23 +5,29 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectosController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-/* Route::get('/', function () {
-    return view('welcome');
-}); */
+Route::get('/', [HomeController::class, 'getHome'])
+    ->name('home');
 
+// ----------------------------------------
+Route::get('login', function () {
+    return view('auth.login');
+});
+Route::get('logout', function () {
+    return "Logout usuario";
+});
+
+// ----------------------------------------
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return Inertia::render('Dashboard');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::get('/', [HomeController::class, 'getHome'])
-    ->name('home');
 
 // ----------------------------------------
 Route::prefix('proyectos')->group(function () {
