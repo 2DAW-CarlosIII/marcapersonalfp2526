@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
 use Tqdev\PhpCrudApi\Api;
 use Tqdev\PhpCrudApi\Config\Config;
+use App\Http\Controllers\API\TokenController;
+
+//Rutas /api/user
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -15,16 +18,41 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 // Rutas /api/v1
 
 Route::prefix('v1')->group(function () {
-    Route::apiResource('ciclos', CicloController::class);
+
+    Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+
+    // emite un nuevo token
+    Route::post('tokens', [TokenController::class, 'store']);
+    // elimina el token del usuario autenticado
+    Route::delete('tokens', [TokenController::class, 'destroy'])->middleware('auth:sanctum');
+
 
     Route::apiResource('familias_profesionales', FamiliaProfesionalController::class)
-    ->parameters([
-        'familias_profesionales' => 'familiaProfesional'
-    ]);
+        ->parameters([
+            'familias_profesionales' => 'familiaProfesional'
+        ]);
 
+    Route::apiResource('users', App\Http\Controllers\API\UserController::class)
+        ->parameters([
+            'users' => 'user'
+        ]);
+
+
+    Route::apiResource('users.idiomas', App\Http\Controllers\API\UserIdiomaController::class)
+        ->parameters([
+            'users' => 'user',
+            'idiomas' => 'idioma'
+        ]);
+
+
+    ROute::apiResource('idiomas', App\Http\Controllers\API\IdiomaController::class)
+        ->parameters([
+            'idiomas' => 'idioma'
+        ]);
 });
-
-
 
 // Rutas PHP-CRUD-API
 Route::any('/{any}', function (ServerRequestInterface $request) {
@@ -42,8 +70,6 @@ Route::any('/{any}', function (ServerRequestInterface $request) {
         $records = json_decode($response->getBody()->getContents())->records;
         $response = response()->json($records, 200, $headers = ['X-Total-Count' => count($records)]);
     } catch (\Throwable $th) {
-
     }
     return $response;
-
 })->where('any', '.*')->middleware(['auth:sanctum']);
