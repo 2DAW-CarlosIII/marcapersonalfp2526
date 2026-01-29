@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+
 
         /* User::factory()->create([
             'name' => 'Test User',
@@ -30,11 +30,14 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
         Schema::disableForeignKeyConstraints();
 
+        User::truncate();
+        User::factory(10)->create();
+
         self::seedProyectos();
         $this->command->info('Tabla catálogo inicializada con datos!');
         $this->call(FamiliasProfesionalesTableSeeder::class);
         $this->call(CiclosTableSeeder::class);
-
+        $this->call(IdiomasTableSeeder::class);
         Model::reguard();
         Schema::enableForeignKeyConstraints();
     }

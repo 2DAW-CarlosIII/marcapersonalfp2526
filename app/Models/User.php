@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Curriculo::class);
     }
+
+
+    public function idiomas(){
+        return $this->belongsToMany(Idioma::class, 'users_idiomas', 'user_id', 'idioma_id');
+    }
 }
