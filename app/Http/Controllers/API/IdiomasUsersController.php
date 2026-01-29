@@ -15,19 +15,17 @@ class IdiomasUsersController extends Controller
      */
     public function index(User $user)
     {
-       return $user->idiomas()->get();
+        return $user->idiomas()->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
-        $idiomas_users = json_decode($request->getContent(), true);
+        $user->idiomas()->attach($request->idioma_id);
 
-        $idiomas_users = Idiomas_Users::create($idiomas_users);
-
-        return new Idiomas_Users($idiomas_users);
+        return response()->json($user, 201);
     }
 
     /**
@@ -35,7 +33,7 @@ class IdiomasUsersController extends Controller
      */
     public function show(User $user, Idioma $idioma)
     {
-        return new Idiomas_Users($idioma);
+        return $user->idiomas()->where('idiomas.id', $idioma->id)->first();
     }
 
     /**
@@ -43,24 +41,19 @@ class IdiomasUsersController extends Controller
      */
     public function update(Request $request, User $user, Idioma $idioma)
     {
-        $idiomaData = json_decode($request->getContent(), true);
-        $idioma->update($idiomaData);
+        $user->idiomas()->detach($idioma->id);
+        $user->idiomas()->attach($request->idioma_id);
 
-        return new Idiomas_Users($idioma);
+        return response()->json($user->idiomas()->get());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Idiomas_Users $idiomas_users)
+    public function destroy(User $user, Idioma $idioma)
     {
-        try {
-            $idiomas_users->delete();
-            return response()->json(null, 204);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error: ' . $e->getMessage()
-            ], 400);
-        }
+        $user->idiomas()->detach($idioma->id);
+
+        return response()->noContent();
     }
 }
