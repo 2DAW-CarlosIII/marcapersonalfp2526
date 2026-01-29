@@ -5,8 +5,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectosController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::get('/', [HomeController::class, 'getHome']);
+Route::get('/', [HomeController::class, 'getHome'])
+    ->name('home');
 
 // ----------------------------------------
 Route::get('login', function () {
@@ -16,6 +18,16 @@ Route::get('logout', function () {
     return "Logout usuario";
 });
 
+// ----------------------------------------
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // ----------------------------------------
 Route::prefix('proyectos')->group(function () {
@@ -31,6 +43,22 @@ Route::prefix('proyectos')->group(function () {
         Route::put('update/{id}', [ProyectosController::class, 'update'])
             ->where('id', '[0-9]+');
     });
+});
+
+Route::prefix('familias-profesionales')->group(function () {
+    Route::get('/', [FamiliasProfesionalesController::class, 'getIndex']);
+
+    Route::get('create', [FamiliasProfesionalesController::class, 'getCreate']);
+
+    Route::get('/show/{id}', [FamiliasProfesionalesController::class, 'getShow']) -> where('id', '[0-9]+');
+
+    Route::get('/edit/{id}', [FamiliasProfesionalesController::class, 'getEdit']) -> where('id', '[0-9]+');
+
+    Route::post('store', [FamiliasProfesionalesController::class, 'store']);
+
+    Route::put('update/{id}', [FamiliasProfesionalesController::class, 'update'])-> where('id', '[0-9]+');
+
+
 });
 
 require __DIR__.'/auth.php';

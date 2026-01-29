@@ -1,6 +1,4 @@
-
-
-            <!-- Settings Dropdown -->
+<!-- Settings Dropdown -->
             <li>
                 {{ Auth::user()->name }}
                 <ul>
