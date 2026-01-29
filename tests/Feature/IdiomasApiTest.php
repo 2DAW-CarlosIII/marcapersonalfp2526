@@ -148,4 +148,5 @@ class IdiomasApiTest extends TestCase
             $this->assertFalse($idioma->users->contains('id', $user->id));
         }
     }
+    protected $seed = true;
 }

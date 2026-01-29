@@ -14,7 +14,7 @@ class IdiomaUserController extends Controller
      */
     public function index(User $user)
     {
-        return response()->json($user->idiomas()->get());
+        return $user->idiomas()->get();
     }
 
     /**
@@ -22,16 +22,16 @@ class IdiomaUserController extends Controller
      */
     public function store(Request $request, User $user)
     {
-        $idioma = $user->idiomas()->create($request->all());
-        return response()->json($idioma, 201);
+        $user->idiomas()->attach($request->idioma_id);
+        return response()->json($user, 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserIdioma $userIdioma, User $user)
+    public function destroy(User $user, $idioma_id)
     {
-        $user->idiomas()->detach($userIdioma);
+        $user->idiomas()->detach($idioma_id);
         return response()->json(null, 204);
     }
 }
