@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\IdiomaResource;
+use App\Models\Idioma;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,13 +15,13 @@ class IdiomasUsersController extends Controller
      */
     public function index(Request $request, User $user_id)
     {
-        return $user_id->idiomas()->orderBy('english_name')->get();
+        return $user_id->idiomas()->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $user_id)
+    public function store(Request $request, User $user_id)
     {
         $user_id->idiomas()->attach($request->idioma_id);
         return response()->json(null, 201);
@@ -29,7 +30,7 @@ class IdiomasUsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($user_id, $idiomaId)
+    public function show(User $user_id, Idioma $idiomaId)
     {
         $idioma = $user_id->idiomas()->where('id', $idiomaId)->firstOrFail();
         return new IdiomaResource($idioma);
@@ -38,7 +39,7 @@ class IdiomasUsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $user_id, $idiomaId)
+    public function update(Request $request, User $user_id, Idioma $idiomaId)
     {
         $idioma = $user_id->idiomas()->where('id', $idiomaId)->firstOrFail();
         $user_id->idiomas()->updateExistingPivot($idiomaId, $request->all());
@@ -48,7 +49,7 @@ class IdiomasUsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($user_id, $idiomaId)
+    public function destroy(User $user_id, Idioma $idiomaId)
     {
         $user_id->idiomas()->detach($idiomaId);
         return response()->json(null, 204);
