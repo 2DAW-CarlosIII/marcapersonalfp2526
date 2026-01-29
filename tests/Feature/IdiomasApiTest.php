@@ -111,6 +111,7 @@ class IdiomasApiTest extends TestCase
 
     public function test_can_list_user_idiomas_via_api()
     {
+
         $user = User::find(1);
 
         $create = $this->postJson('/api/v1/idiomas', $this->idiomaPayload(['alpha2' => 'it']));
@@ -123,6 +124,8 @@ class IdiomasApiTest extends TestCase
         $response = $this->getJson("/api/v1/users/{$user->id}/idiomas");
         $response->assertOk();
         $response->assertJsonFragment(['alpha2' => 'it']);
+
+
     }
 
     public function test_can_detach_idioma_from_user_and_relations_are_removed()
@@ -148,4 +151,5 @@ class IdiomasApiTest extends TestCase
             $this->assertFalse($idioma->users->contains('id', $user->id));
         }
     }
+    protected $seed = true;
 }

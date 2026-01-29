@@ -16,7 +16,7 @@ class UserIdiomaController extends Controller
     {
         $idiomas = $user->idiomas()->get();
         return response()->json($idiomas);
-        
+
     }
 
 
@@ -36,7 +36,7 @@ class UserIdiomaController extends Controller
     public function destroy(User $user, $idioma)
     {
         $user->idiomas()->detach($idioma);
-        return response()->json(['message' => 'Idioma eliminado correctamente'], 200);
+        return response()->json(['message' => 'Idioma eliminado correctamente'], 204);
     }
 
     /**
