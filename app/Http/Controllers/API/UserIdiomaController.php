@@ -13,27 +13,35 @@ class UserIdiomaController extends Controller
 {
     public function index(User $user)
     {
-        return IdiomaResource::collection($user->idiomas);
+        return $user->idiomas()->get();
     }
 
-    public function store(Request $request, User $user)
+    public function store(Request $request, User $user, Idioma $idioma)
     {
         $user->idiomas()->attach($request->idioma_id);
 
-        $idioma = Idioma::findOrFail($request->idioma_id);
-
-        return new IdiomaResource($idioma);
+        return response()->json(null, 201);
     }
 
     public function show(User $user, Idioma $idioma)
     {
+        $idioma = $user->idiomas()->findOrFail($idioma->id);
+
+        return new IdiomaResource($idioma);
+    }
+
+    public function update(Request $request, User $user, Idioma $idioma)
+    {
+        $idioma = $user->idiomas()->findOrFail($idioma->id);
+        $user->idiomas()->updateExistingPivot($idioma->id, $request->all());
+
         return new IdiomaResource($idioma);
     }
 
     public function destroy(User $user, Idioma $idioma)
     {
-        $user->idiomas()->detach($idioma->id);
+        $user->idiomas()->detach($idioma);
 
-        return response()->noContent();
+        return response()->json(null, 204);
     }
 }
