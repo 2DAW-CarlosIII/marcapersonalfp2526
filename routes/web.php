@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,15 +44,15 @@ Route::prefix('familias-profesionales')->group(function () {
 
     Route::get('create', [FamiliasProfesionalesController::class, 'getCreate']);
 
-    Route::get('/show/{id}', [FamiliasProfesionalesController::class, 'getShow']) -> where('id', '[0-9]+');
+    Route::get('/show/{id}', [FamiliasProfesionalesController::class, 'getShow'])->where('id', '[0-9]+');
 
-    Route::get('/edit/{id}', [FamiliasProfesionalesController::class, 'getEdit']) -> where('id', '[0-9]+');
+    Route::get('/edit/{id}', [FamiliasProfesionalesController::class, 'getEdit'])->where('id', '[0-9]+');
 
     Route::post('store', [FamiliasProfesionalesController::class, 'store']);
 
-    Route::put('update/{id}', [FamiliasProfesionalesController::class, 'update'])-> where('id', '[0-9]+');
+    Route::put('update/{id}', [FamiliasProfesionalesController::class, 'update'])->where('id', '[0-9]+');
 
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
